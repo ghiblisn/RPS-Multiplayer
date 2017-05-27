@@ -29,6 +29,6 @@
 .displayNone{
 	display: none;
 }
-.choiceButton{
+.choiceButton, #choice1Picked, #choice2Picked{
 	color:black;
 }

@@ -142,33 +142,47 @@ database.ref().on("value", function(snapshot) {
 		}
 	};
 
-	if (currentTurn==3&&yourPlayer=="1"){
+	if (currentTurn==3){
 		var x = snapshot.child("players").child("1").val().choice;
 		var y = snapshot.child("players").child("2").val().choice;
 		determineWinner(x,y);
-		if(result=="Win"){
-			var newWin1 = parseInt(snapshot.child("players").child("1").val().wins)+1
-			database.ref("players/1").update({
-	 			wins: newWin1,
-			});  
-			var newLose2= parseInt(snapshot.child("players").child("2").val().loses)+1
-			database.ref("players/2").update({
-	 			loses: newLose2,
-			});
+		if(yourPlayer=="1"){	
+			database.ref().update({
+			 	turn: 4,
+			})
+			if(result=="Win"){
+				var newWin1 = parseInt(snapshot.child("players").child("1").val().wins)+1
+				database.ref("players/1").update({
+		 			wins: newWin1,
+				});  
+				var newLose2= parseInt(snapshot.child("players").child("2").val().loses)+1
+				database.ref("players/2").update({
+		 			loses: newLose2,
+				});
+				$("#results").html("You Won!");
+			}
+			else if(result=="Lose"){
+				var newWin2 = parseInt(snapshot.child("players").child("2").val().wins)+1
+				database.ref("players/2").update({
+		 			wins: newWin2,
+				});
+				var newLose1= parseInt(snapshot.child("players").child("1").val().loses)+1  
+				database.ref("players/1").update({
+		 			loses: newLose1,
+				});
+				$("#results").html("You lost!");
+			};
 		}
-		else if(result=="Lose"){
-			var newWin2 = parseInt(snapshot.child("players").child("2").val().wins)+1
-			database.ref("players/2").update({
-	 			wins: newWin2,
-			});
-			var newLose1= parseInt(snapshot.child("players").child("1").val().loses)+1  
-			database.ref("players/1").update({
-	 			loses: newLose1,
-			});
-		};
-		database.ref().update({
-	 		turn: 1,
-		})
+		if(yourPlayer=="2"){
+			if(result=="Win"){
+				$("#results").html("You Lost!");
+			}
+			else if(result=="Lose"){
+				$("#results").html("You Won!");
+			}
+		}
+		$("#choice1Picked").html(snapshot.child("players").child("1").val().choice);
+		$("#choice2Picked").html(snapshot.child("players").child("2").val().choice);
 	};
 
   
