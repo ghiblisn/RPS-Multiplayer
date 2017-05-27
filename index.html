@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/css/reset.css">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    
+    <!-- Bring in personal stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Bring in bootswatch theme -->
+    <link rel="stylesheet" href="https://bootswatch.com/superhero/bootstrap.css">
+
+    <!-- Bring in google font -->
+    <link href="https://fonts.googleapis.com/css?family=Rationale|Russo+One" rel="stylesheet">
+
+    <!-- Firebase Reference -->
+    <script src="https://www.gstatic.com/firebasejs/4.0.0/firebase.js"></script>
+
+    <!-- Personal JavaScript -->   
+    <script src="assets/javascript/app.js"></script>
+
+    <!-- Bring in Moments.js -->
+    <!-- <script src="moment.js"></script> -->
+    
+    <title>RPS Multiplayer</title>
+  </head>
+  <body>
+
+    <h1 class="page-header text-center" font-family="'Lobster', cursive">Rock Paper Scissors</h1>
+    
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 offset-md-4 text-center">
+          <form id="name-form">
+            <input type="text" id="name-input" placeholder="Name">
+            <input id="nameButton" type="submit" value="Start">
+          </form>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 offset-md-4 text-center" id="turnDiv">
+        </div>
+      </div>
+
+      <div class="row text-center justify-content-md-center">
+        <div class="col-md-3 paddingClass borderClass" id="player1">
+          <div id="player1Name">
+            Player 1
+          </div>
+          <div id="player1Choice" class="displayNone">
+            <button class="choiceButton" id="Rock">Rock</button>
+            <button class="choiceButton" id="Paper">Paper</button>
+            <button class="choiceButton" id="Scissors">Scissors</button>
+          </div>
+          <div id="player1Score">
+            Losses: 0 Wins: 0
+          </div>
+        </div>
+        <div class="col-md-3 paddingClass borderClass" id="results">Results</div>
+        <div class="col-md-3 paddingClass borderClass" id="player2">
+          <div id="player2Name">
+            Player 2
+          </div>
+          <div id="player2Choice" class="displayNone">
+            <button class="choiceButton" id="Rock">Rock</button>
+            <button class="choiceButton" id="Paper">Paper</button>
+            <button class="choiceButton" id="Scissors">Scissors</button>
+          </div>
+          <div id="player2Score">
+            Losses: 0 Wins: 0 
+          </div>
+        </div>
+      </div>
+
+      <div class="row text-center justify-content-md-center">
+        <div class="col-md-6 well chatroomClass" id="chatroom">
+          Chatroom
+        </div>
+      </div>
+
+      <div class="row text-center justify-content-md-center">
+        <div class="col-md-6" id="chat-form">
+          <form>
+              <input type="text" id="chat-input" placeholder="Message">
+              <input id="chatButton" type="submit" value="Send">
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+  </body>
+</html>
+
