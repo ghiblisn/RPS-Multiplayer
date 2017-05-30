@@ -198,6 +198,17 @@ database.ref().on("value", function(snapshot) {
    	$("#player1Score").html("Wins: "+snapshot.child("players").child("1").val().wins+" Loses: "+snapshot.child("players").child("1").val().loses)
    	$("#player2Score").html("Wins: "+snapshot.child("players").child("2").val().wins+" Loses: "+snapshot.child("players").child("2").val().loses)
 
+   	if (currentTurn==4){
+   		setTimeout(function(){
+   			database.ref().update({
+			 	turn: 1,
+			});
+			$("#results").html("");
+			$("#choice1Picked").html("");
+			$("#choice2Picked").html("");
+   		},3000)
+   	}
+
   // If any errors are experienced, log them to console.
 }, function(errorObject) {
   console.log("The read failed: " + errorObject.code);
