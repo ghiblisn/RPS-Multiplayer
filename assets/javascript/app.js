@@ -20,8 +20,8 @@ var player1Name = "";
 var player2Name = "";
 var currentTurn = "";
 var choicePicked = "";
-var wins =0;
-var loses =0;
+var localWins =0;
+var localLoses =0;
 var rpsArray=[["Tie","Lose","Win"],
 				["Win","Tie","Lose"],
 				["Lose","Win","Tie"]];
@@ -30,6 +30,7 @@ var result ="";
 
 var connectionsRef = database.ref("/connections");
 var connectedRef = database.ref(".info/connected");
+var localChat=null;
 
 // When the client's connection state changes...
 connectedRef.on("value", function(snap) {
@@ -41,6 +42,53 @@ connectedRef.on("value", function(snap) {
     var con = connectionsRef.push(true);
     // Remove user from the connection list when they disconnect.
     con.onDisconnect().remove();
+
+/*    if(yourPlayer=="1"){
+    	alert("hi")
+    	database.ref("/players/1/name").onDisconnect().set(null);
+	    database.ref("/players/1/choice").onDisconnect().set(null);
+	    database.ref("/players/1/loses").onDisconnect().set(0);
+	    database.ref("/players/1/wins").onDisconnect().set(0);
+	    database.ref("/players/2/choice").onDisconnect().set(null);
+	    database.ref("/players/2/choice").onDisconnect().set(null);
+	    var chat= snapshot.val().chatContent
+	    if(true){
+	    	chat = chat + "<p>" +snapshot.child("players").child("1").val().name+" disconnected!</p>"
+	    	database.ref().update({
+	 			chatContent: chat,	
+			});
+	    }
+    }
+    else if(yourPlayer=="2"){
+    	database.ref("/players/2/name").onDisconnect().set(null);
+	    database.ref("/players/2/choice").onDisconnect().set(null);
+	    database.ref("/players/2/loses").onDisconnect().set(0);
+	    database.ref("/players/2/wins").onDisconnect().set(0);
+	    database.ref("/players/1/choice").onDisconnect().set(null);
+	    if(true){
+	    	chat = chat + "<p>"+ snapshot.child("players").child("2").val().name+" disconnected!</p>"
+	    	database.ref().update({
+	 			chatContent: chat,	
+			});
+	    }
+    }
+    else{
+    	database.ref().update({
+	 		chatContent: null,	
+		});
+    };*/
+    database.ref("/players/1").update({
+    	name:null,
+    	choice:null,
+    });
+    database.ref("/players/2").update({
+    	name:null,
+    	choice:null,
+    });
+
+    database.ref().update({
+	 	chatContent: null,	
+	});
   }
 });
 
@@ -73,8 +121,7 @@ database.ref().on("value", function(snapshot) {
    			player1Name = snapshot.child("players").child("1").val().name;
    			$("#player1Name").html(player1Name);
    			//If your name is the same as player 1 name then you are player 1
-   			if(player1Name==playerName){
-   				console.log("im setting yourPlayer=1");
+   			if(player1Name==playerName&& playerName!=""){
    				yourPlayer="1";
 	   			opponentPlayer="2";
 	   			$("#name-form").html("Hi "+playerName+" ! You are player "+yourPlayer);
@@ -96,8 +143,7 @@ database.ref().on("value", function(snapshot) {
    		if (snapshot.child("players").child("2").val().name!=null){
    			player2Name = snapshot.child("players").child("2").val().name;
 	   		$("#player2Name").html(player2Name);
-   			if(player2Name==playerName){
-   				console.log("im setting yourPlayer=2");
+   			if(player2Name==playerName&& playerName!=""){
    				yourPlayer="2";
 	   			opponentPlayer="1";
 	   			$("#name-form").html("Hi "+playerName+" ! You are player "+yourPlayer);
@@ -143,6 +189,8 @@ database.ref().on("value", function(snapshot) {
 	};
 
 	if (currentTurn==3){
+		$("#player2").removeClass("yellowBorder");
+		$("#player2Choice").addClass("displayNone");
 		var x = snapshot.child("players").child("1").val().choice;
 		var y = snapshot.child("players").child("2").val().choice;
 		determineWinner(x,y);
@@ -171,6 +219,9 @@ database.ref().on("value", function(snapshot) {
 		 			loses: newLose1,
 				});
 				$("#results").html("You lost!");
+			}
+			else if(result=="Tie"){
+				$("#results").html("Tie!");
 			};
 		}
 		if(yourPlayer=="2"){
@@ -180,6 +231,9 @@ database.ref().on("value", function(snapshot) {
 			else if(result=="Lose"){
 				$("#results").html("You Won!");
 			}
+			else if(result=="Tie"){
+				$("#results").html("Tie!");
+			};
 		}
 		$("#choice1Picked").html(snapshot.child("players").child("1").val().choice);
 		$("#choice2Picked").html(snapshot.child("players").child("2").val().choice);
@@ -188,12 +242,12 @@ database.ref().on("value", function(snapshot) {
   
    	currentTurn=snapshot.val().turn;
    	if(yourPlayer=="1"){
-   		wins = snapshot.child("players").child("1").val().wins;
-   		loses = snapshot.child("players").child("1").val().loses;
+   		localWins = snapshot.child("players").child("1").val().wins;
+   		localLoses = snapshot.child("players").child("1").val().loses;
    	}
    	else if(yourPlayer=="2"){
-   		wins = snapshot.child("players").child("2").val().wins;
-   		loses = snapshot.child("players").child("2").val().loses;
+   		localWins = snapshot.child("players").child("2").val().wins;
+   		localLoses = snapshot.child("players").child("2").val().loses;
    	}
    	$("#player1Score").html("Wins: "+snapshot.child("players").child("1").val().wins+" Loses: "+snapshot.child("players").child("1").val().loses)
    	$("#player2Score").html("Wins: "+snapshot.child("players").child("2").val().wins+" Loses: "+snapshot.child("players").child("2").val().loses)
@@ -206,8 +260,44 @@ database.ref().on("value", function(snapshot) {
 			$("#results").html("");
 			$("#choice1Picked").html("");
 			$("#choice2Picked").html("");
-   		},3000)
+   		},5000)
    	}
+
+
+   	if(!snapshot.child("chatContent").exists()){
+   		database.ref().update({
+	 		chatContent: null,	
+		});
+   	}
+   	else if(snapshot.val().chatContent!=null){
+   		localChat = snapshot.val().chatContent;
+		$("#chatroom").html(localChat);	
+   	};
+
+   	/*//Re-initialize the data for your player if the other player disconnected.
+   	if(yourPlayer!=""){
+   		database.ref("/players/"+yourPlayer+"/").update({
+		 	wins: 0,
+		 	loses: 0	
+		});
+		database.ref("/players/"+opponentPlayer+"/").update({
+		 	wins: 0,
+		 	loses: 0	
+		});
+	   	database.ref("/players/"+yourPlayer+"/").update({
+		 	name: playerName,
+		 	wins: localWins,
+		 	loses: localLoses	
+		});
+		if(yourPlayer=="1"){
+	   		localWins = snapshot.child("players").child("1").val().wins;
+	   		localLoses = snapshot.child("players").child("1").val().loses;
+	   	}
+	   	else if(yourPlayer=="2"){
+	   		localWins = snapshot.child("players").child("2").val().wins;
+	   		localLoses = snapshot.child("players").child("2").val().loses;
+	   	}
+   	}*/
 
   // If any errors are experienced, log them to console.
 }, function(errorObject) {
@@ -251,6 +341,21 @@ $( document ).ready(function() {
 		}
 
 	})
+	$(document).on("click","#chatButton",function(){
+		event.preventDefault();
+		var chatMessage = $("#chat-input").val().trim();
+		if(localChat!=null){
+			localChat= localChat + "<p>"+playerName+": "+chatMessage+"</p>";
+		}
+		else{
+			localChat= "<p>"+playerName+": "+chatMessage+"</p>";
+		}
+		database.ref().update({
+	 		chatContent: localChat,	
+		});
+		$("#chat-input").val("");
+	})
+
 })
 
 function determineWinner(x,y){

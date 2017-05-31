@@ -29,6 +29,12 @@
 .displayNone{
 	display: none;
 }
-.choiceButton, #choice1Picked, #choice2Picked{
+.choiceButton, #player1Choice, #player2Choice{
 	color:black;
+}
+#player1Score, #player1Score{
+	text-align: bottom;
+}
+p{
+	margin-bottom: 0;
 }
